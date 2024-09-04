@@ -44,17 +44,21 @@ public class UserController {
     public boolean validateToken(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return false;
+            return false; // If no authorization header or it doesn't start with "Bearer ", return false
         }
-        System.err.println("Inside Controller   --- 1");
-        String token = authHeader.substring(7);
+        String token = authHeader.substring(7); // Remove "Bearer " from the token
 
-        if (jwtService.validateToken(token)) {
-            System.err.println("Inside Controller   --- 2");
-            return true;
-        } else {
-            System.err.println("Inside Controller   --- 3");
-            return false;
+        try {
+            // Attempt to validate the token
+            if (jwtService.validateToken(token)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            // Catch any exceptions that occur during token validation (e.g., SignatureException)
+            System.err.println("Token validation failed: " + e.getMessage());
+            return false; // Return false if token validation fails
         }
     }
 
@@ -136,25 +140,3 @@ public class UserController {
     }
 
 }
-
-
-----                 -------------         ------ ----
-d-----        04-09-2024     14:05                src
-d-----        04-09-2024     14:58                target
--a----        04-09-2024     14:05           1850 HELP.md
--a----        04-09-2024     14:05          11598 mvnw
--a----        04-09-2024     14:05           7797 mvnw.cmd
--a----        04-09-2024     15:01           3625 pom.xml
--a----        04-09-2024     14:05          11413 README.md
-
-
-----                 -------------         ------ ----
-d-----        04-09-2024     08:11                .mvn
-d-----        04-09-2024     08:11                src
-d-----        04-09-2024     14:10                target
--a----        04-09-2024     08:11            428 .gitignore
--a----        04-09-2024     08:11          10925 mvnw
--a----        04-09-2024     08:11           7062 mvnw.cmd
--a----        04-09-2024     08:11           3672 pom.xml
-
-

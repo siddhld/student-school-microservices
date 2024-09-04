@@ -1,11 +1,10 @@
 package com.jwt.springsecurity.service;
 
 import com.jwt.springsecurity.model.UserInfo;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
@@ -80,36 +79,46 @@ public class JwtService {
     }
 
     public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
+        String username = extractClaim(token, Claims::getSubject);
+        if (username == null) {
+            return null; // Handle null username case
+        }
+        return username;
     }
 
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    public List<GrantedAuthority> extractAuthorities(String token) {
-
-        List<Map<String, String>> authorities = extractClaim(token, claims -> claims.get("authorities", List.class));
-        List<String> roles = authorities.stream()
-                .map(authorityMap -> authorityMap.get("authority"))
-                .collect(Collectors.toList());
-
-        return roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
-    }
-
     private <T> T extractClaim(String token, Function<Claims, T> claimResolver) {
         final Claims claim = extractAllClaims(token);
+        if (claim == null) {
+            // Return null or handle accordingly when claims are null
+            return null;
+        }
         return claimResolver.apply(claim);
     }
 
     private Claims extractAllClaims(String token) {
-
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(getSignInKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-        return claims;
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(getSignInKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (SignatureException e) {
+            System.err.println("Invalid JWT signature: " + e.getMessage());
+            return null; // Return null or handle in a better way
+        } catch (ExpiredJwtException e) {
+            System.err.println("JWT expired: " + e.getMessage());
+            return null; // Return null for expired tokens
+        } catch (MalformedJwtException e) {
+            System.err.println("Invalid JWT format: " + e.getMessage());
+            return null; // Handle malformed token
+        } catch (Exception e) {
+            System.err.println("Error parsing JWT: " + e.getMessage());
+            return null;
+        }
     }
 
 
@@ -121,7 +130,10 @@ public class JwtService {
         final String username = extractUsername(token);
 
         try {
-            extractAllClaims(token);
+            final Claims claims = extractAllClaims(token);
+            if (claims == null) {
+                return false; // Invalid or expired token
+            }
             return (username.equals(userDetails.getUsername()) && !isTokenExpired(token) && !tokenBlacklistService.isTokenBlacklisted(token));
         } catch (Exception e) {
             return false;
@@ -130,12 +142,13 @@ public class JwtService {
 
     public boolean validateToken(String token) {
         try {
-            System.err.println("Inside Validate method   --- 1");
-            extractAllClaims(token);
-            System.err.println("Inside Validate method   --- 2");
+            final Claims claims = extractAllClaims(token);
+            if (claims == null) {
+                return false; // Invalid or expired token
+            }
             return (!isTokenExpired(token) && !tokenBlacklistService.isTokenBlacklisted(token));
         } catch (Exception e) {
-            System.err.println("Inside Validate method   --- 3");
+            System.err.println("Token validation failed: " + e.getMessage());
             return false;
         }
     }
@@ -145,7 +158,10 @@ public class JwtService {
 //    throwing an exception.
     public boolean validateRefreshToken(String token) {
         try {
-            extractAllClaims(token);
+            final Claims claims = extractAllClaims(token);
+            if (claims == null) {
+                return false; // Invalid or expired token
+            }
             return true;
         } catch (Exception e) {
             return false;
