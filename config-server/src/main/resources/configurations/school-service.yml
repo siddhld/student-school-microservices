@@ -1,0 +1,38 @@
+server:
+  port: 8091
+
+# Eureka Client configuration
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+# PostgreSQL Database configuration
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/schools
+    #    siddhld
+    username: ${DB_USERNAME}
+    #    admin@123
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  # JPA (Java Persistence API) configurations
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    # This specifies that the database being used is PostgreSQL. It helps Hibernate optimize its queries for PostgreSQL.
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+application:
+  config:
+    students-url: http://localhost:8222/api/v1/students  # Used 8222 instead of 8090 to route to api-gateway
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0

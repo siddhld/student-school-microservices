@@ -1,0 +1,38 @@
+#eureka:
+#  client:
+#    register-with-eureka: false
+
+# Eureka Client configuration
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+server:
+  port: 8222
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: student-service
+          uri: http://localhost:8090
+          predicates:
+            - Path=/api/v1/students/**
+
+        - id: school-service
+          uri: http://localhost:8091
+          predicates:
+            - Path=/api/v1/schools/**
+        - id: auth-service
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/auth/**
+management:
+  tracing:
+    sampling:
+      probability: 1.0

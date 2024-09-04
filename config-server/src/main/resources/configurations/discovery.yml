@@ -1,0 +1,11 @@
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    register-with-eureka: false  # The discovery server itself does not need to register with Eureka
+    fetch-registry: false  # The discovery server doesn't need to fetch the registry since it's the source
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+server:
+  wait-time-in-ms-when-sync-empty: 0
+  port: 8761  # Default port for Eureka server
