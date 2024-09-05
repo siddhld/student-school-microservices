@@ -4,7 +4,7 @@
 
 This project is a microservices-based architecture built with Spring Boot. It consists of various services including an API Gateway, Config Server, Discovery Server, Student Microservice, School Microservice, and other supporting services. The application demonstrates modern microservices patterns such as service discovery, centralized configuration, inter-service communication using OpenFeign, and distributed tracing with Zipkin.
 
-![architecture](https://drive.google.com/file/d/1-JAOrvGrUSfPQvnmVk4z7LkaYH0zRL7Y/view?usp=sharing)
+![architecture](https://imgs.search.brave.com/AZkKYOifhfns8OmMQcTUfP9YTKWXy4N2vwDbbzYEV9U/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly91cGxv/YWQud2lraW1lZGlh/Lm9yZy93aWtpcGVk/aWEvY29tbW9ucy9i/L2I2L1BlbmNpbF9k/cmF3aW5nX29mX2Ff/Z2lybF9pbl9lY3N0/YXN5LmpwZw)
 
 ## Project Components
 
