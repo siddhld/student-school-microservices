@@ -124,7 +124,7 @@ This project includes the following microservices:
 
 ### Prerequisites:
 - Docker installed
-- Java 11+
+- Java 17
 - Maven
 
 
