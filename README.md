@@ -3,6 +3,7 @@
 ## Overview
 
 This project is a microservices-based architecture built with Spring Boot. It consists of various services including an API Gateway, Config Server, Discovery Server, Student Microservice, School Microservice, and other supporting services. The application demonstrates modern microservices patterns such as service discovery, centralized configuration, inter-service communication using OpenFeign, and distributed tracing with Zipkin.
+file:///home/sidd/SIDD/JOURNEY%202.0/Project%20Architecture.png
 
 ## Project Components
 
