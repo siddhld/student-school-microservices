@@ -27,7 +27,7 @@ This project includes the following microservices:
 - **Zipkin**: http://localhost:9411
 
 ## Technologies Used
-- **Java 11**
+- **Java 17**
 - **Spring Boot**
 - **Spring Cloud** (Config Server, Eureka, Gateway)
 - **Spring Security** for authentication
@@ -139,13 +139,3 @@ This project includes the following microservices:
    start - School Server
    start - Student Server
    ```
-
- **Access the Services:**
-   - API Gateway: `http://localhost:8222`
-   - Config Server: `http://localhost:8888`
-   - Discovery Server: `http://localhost:8761`
-   - Auth Service: `http://localhost:8099`
-   - Student Service: `http://localhost:8090`
-   - School Service: `http://localhost:8091`
-   - pgAdmin: `http://localhost:5050`
-   - Zipkin: `http://localhost:9411`
