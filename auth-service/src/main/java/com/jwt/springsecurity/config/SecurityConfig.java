@@ -1,6 +1,5 @@
 package com.jwt.springsecurity.config;
 
-import com.jwt.springsecurity.filter.JwtFilter;
 import com.jwt.springsecurity.service.UserServiceInfoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -18,12 +17,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-    @Autowired
-    private JwtFilter jwtFilter;
 
     @Autowired
     private UserServiceInfoImpl userDetailsService;
@@ -32,11 +30,16 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/test", "/auth/signup", "/auth/login", "/auth/validate-token", "/actuator/**").permitAll()
-                        .anyRequest().authenticated())
+                        .requestMatchers("/auth/test",
+                                "/auth/signup",
+                                "/auth/login",
+                                "/auth/logout",
+                                "/auth/validate-token",
+                                "/auth/generate-access-token",
+                                "/actuator/**").permitAll()
+                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 

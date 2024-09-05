@@ -28,6 +28,7 @@ spring:
           uri: http://localhost:8091
           predicates:
             - Path=/api/v1/schools/**
+
         - id: auth-service
           uri: lb://AUTH-SERVICE
           predicates:

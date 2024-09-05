@@ -1,6 +1,14 @@
 spring:
   application:
     name: gateway
+  cloud:
+    gateway:
+      default-filters:
+        - AuthenticationFilter
 
   config:
     import: optional:configserver:http://localhost:8888
+
+jwt:
+  secret:
+    key: F16214C6D734BC929815DFC598EDCRE656HGFYRDTHRFCEe
